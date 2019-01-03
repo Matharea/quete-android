@@ -74,8 +74,8 @@ public class LayoutManager {
             }
             break;
           case "layout_gravity":
-            // TODO - Add gravity
-            break;
+             gravity = Gravity.CENTER_HORIZONTAL;
+             break;
           default:
             nodeAttr.put(key, value);
             break;
@@ -98,7 +98,7 @@ public class LayoutManager {
    * @param unit Unit of entry value
    * @return The converted numerical value to pixel unit
    */
-  static private int convertToPixel(String value, String unit) {
+  static public int convertToPixel(String value, String unit) {
     DisplayMetrics displayMetric = MainActivity.getAppContext().getResources().getDisplayMetrics();
 
     int pixel = 0;

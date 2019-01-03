@@ -5,6 +5,7 @@ import android.os.Build;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.InputType;
 import android.util.Log;
+import android.view.View;
 
 import org.xmlpull.v1.XmlPullParser;
 
@@ -12,59 +13,41 @@ import java.util.HashMap;
 
 import fr.wildcodeschool.xmlparser.LayoutManager;
 
-public class WildEditText extends AppCompatEditText {
+public class WildEditText implements WildView {
   // Log TAG definition
   private static final String TAG = "WildEditText";
-
+private AppCompatEditText compatEditText;
   /**
    * Constructor
    * @param ctx Activity context
    */
   public WildEditText(Context ctx) {
-    super(ctx);
+    compatEditText = new AppCompatEditText(ctx);
   }
 
-  /**
-   *
-   * @param pParser
-   */
-  public void parseXmlNode(XmlPullParser pParser) {
-    HashMap<String, String> items;
-    items = LayoutManager.setLayoutParams(this, pParser);
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-
-      // This is a loop on a HashMap without lambda expression
-      for (HashMap.Entry<String, String> entry : items.entrySet()) {
-        this.setAttribute(entry.getKey(), entry.getValue());
-      }
-    } else {
-      // This is a loop on a HashMap with lambda expression
-      items.forEach((key, value)->this.setAttribute(key, value));
-    }
-  }
 
   /**
    * Populate the view with the attribute value
    * @param key The key of xml attribute
    * @param value The value of xml attribute
    */
-  private void setAttribute(String key, String value) {
+  public void setAttribute(String key, String value) {
     switch (key) {
       case "inputType":
         this.setInputType(value);
         break;
       case "ems":
         try {
-          this.setEms(Integer.getInteger(value));
+          compatEditText.setEms(Integer.getInteger(value));
         } catch (NullPointerException e) {
           Log.e(TAG, e.getMessage());
         }
         break;
       case "text":
-        this.setText(value);
+        compatEditText.setText(value);
         break;
       case "hint":
-        this.setHint(value);
+        compatEditText.setHint(value);
         break;
       case "id":
         /* Nothing to do */
@@ -75,6 +58,11 @@ public class WildEditText extends AppCompatEditText {
     }
   }
 
+  @Override
+  public View getBuildView() {
+    return compatEditText;
+  }
+
   /**
    *
    * @param pInputType
@@ -82,7 +70,7 @@ public class WildEditText extends AppCompatEditText {
   private void setInputType(String pInputType) {
     switch (pInputType) {
       case "textPersonName":
-        this.setInputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME);
+        compatEditText.setInputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME);
         break;
       default:
         // Log it

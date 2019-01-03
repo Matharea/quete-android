@@ -3,6 +3,7 @@ package fr.wildcodeschool.xmlparser.wildView;
 import android.content.Context;
 import android.os.Build;
 import android.util.Log;
+import android.view.View;
 import android.widget.LinearLayout;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -11,50 +12,32 @@ import java.util.HashMap;
 
 import fr.wildcodeschool.xmlparser.LayoutManager;
 
-public class WildLinearLayout extends LinearLayout {
+public class WildLinearLayout implements WildView {
   // Log TAG definition
   private static final String TAG = "WildLinearLayout";
-
+  private LinearLayout compatLayout;
   /**
    * Constructor
    * @param ctx   Activity context
    */
   public WildLinearLayout(Context ctx) {
-    super(ctx);
+    compatLayout = new LinearLayout(ctx);
   }
 
-  /**
-   * Parse the @param XML node
-   * @param pParser
-   */
-  public void parseXmlNode(XmlPullParser pParser) {
-    HashMap<String, String> items;
-    items = LayoutManager.setLayoutParams(this, pParser);
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-
-      // This is a loop on a HashMap without lambda expression
-      for (HashMap.Entry<String, String> entry : items.entrySet()) {
-        this.setAttribute(entry.getKey(), entry.getValue());
-      }
-    } else {
-      // This is a loop on a HashMap with lambda expression
-      items.forEach((key, value)->this.setAttribute(key, value));
-    }
-  }
 
   /**
    * Populate the view with the attribute value
    * @param key The key of xml attribute
    * @param value The value of xml attribute
    */
-  private void setAttribute(String key, String value) {
+  public void setAttribute(String key, String value) {
     switch (key) {
       case "orientation":
-        this.setOrientation( value.equals("horizontal") ?
+        compatLayout.setOrientation( value.equals("horizontal") ?
           LinearLayout.HORIZONTAL : LinearLayout.VERTICAL );
         break;
       case "weightSum":
-        this.setWeightSum(Float.parseFloat(value));
+        compatLayout.setWeightSum(Float.parseFloat(value));
         break;
       case "id":
         /* Nothing to do */
@@ -63,5 +46,14 @@ public class WildLinearLayout extends LinearLayout {
         Log.i(TAG, "Unknown Attribute ["+key+"]");
         break;
     }
+  }
+
+  @Override
+  public View getBuildView() {
+    return compatLayout;
+  }
+
+  public LinearLayout getCompatLayout(){
+    return compatLayout;
   }
 }
