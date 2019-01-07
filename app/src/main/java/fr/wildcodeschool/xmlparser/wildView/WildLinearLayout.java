@@ -9,8 +9,12 @@ import android.widget.LinearLayout;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import fr.wildcodeschool.xmlparser.LayoutManager;
+
+import static fr.wildcodeschool.xmlparser.LayoutManager.convertToPixel;
 
 public class WildLinearLayout implements WildView {
   // Log TAG definition
@@ -31,6 +35,8 @@ public class WildLinearLayout implements WildView {
    * @param value The value of xml attribute
    */
   public void setAttribute(String key, String value) {
+    int marginH = 0;
+    int marginV = 0;
     switch (key) {
       case "orientation":
         compatLayout.setOrientation( value.equals("horizontal") ?
@@ -53,7 +59,7 @@ public class WildLinearLayout implements WildView {
     return compatLayout;
   }
 
-  public LinearLayout getCompatLayout(){
+  public LinearLayout getLayout(){
     return compatLayout;
   }
 }

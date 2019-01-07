@@ -76,7 +76,7 @@ public class Inflater {
               wildView.parseXmlNode(parser);
               lParentView.addView(wildView.getBuildView());
               if (wildView instanceof WildLinearLayout) {
-                  lParentView = ((WildLinearLayout) wildView).getCompatLayout();
+                  lParentView = ((WildLinearLayout) wildView).getLayout();
               }
           }
 

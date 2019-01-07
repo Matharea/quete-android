@@ -7,6 +7,7 @@ import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import org.xmlpull.v1.XmlPullParser;
 
@@ -16,13 +17,15 @@ import java.util.regex.Pattern;
 
 import fr.wildcodeschool.xmlparser.LayoutManager;
 
+import static android.util.TypedValue.COMPLEX_UNIT_SP;
 import static fr.wildcodeschool.xmlparser.LayoutManager.convertToPixel;
 
 public class WildTextView implements WildView {
     // Log TAG definition
     private static final String TAG = "WildTextView";
     private AppCompatTextView compatTextView;
-
+    private int paddingVertical = 0;
+    private int paddingHorizontal = 0;
     /**
      * Constructor
      * @param ctx Activity context
@@ -36,18 +39,19 @@ public class WildTextView implements WildView {
      * @param value The value of xml attribute
      */
     public void setAttribute(String key, String value) {
-        int paddingVertical = 0;
-        int paddingHorizontal = 0;
         switch (key) {
-            case "ems":
+            case "textSize":
                 try {
-                    compatTextView.setEms(Integer.getInteger(value));
+                    compatTextView.setTextSize(COMPLEX_UNIT_SP, 20.00f);
                 } catch (NullPointerException e) {
                     Log.e(TAG, e.getMessage());
                 }
                 break;
             case "text":
                 compatTextView.setText(value);
+                break;
+            case "textColor":
+                compatTextView.setTextColor(Color.parseColor(value));
                 break;
             case "paddingHorizontal" :
             case "paddingVertical" :
@@ -61,7 +65,6 @@ public class WildTextView implements WildView {
                         paddingHorizontal = px;
                     }
                 }
-                compatTextView.setPadding(paddingHorizontal, paddingVertical, paddingHorizontal, paddingVertical);
                 break;
             case "background":
                 compatTextView.setBackgroundColor(Color.parseColor(value));
